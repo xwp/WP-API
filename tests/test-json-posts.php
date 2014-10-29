@@ -531,7 +531,7 @@ class WP_Test_JSON_Posts extends WP_Test_JSON_TestCase {
 	}
 
 	function test_get_post() {
-		$response = $this->endpoint->get_post( $this->post_id );
+		$response = $this->endpoint->get( $this->post_id );
 
 		$this->assertNotInstanceOf( 'WP_Error', $response );
 		$response = json_ensure_response( $response );
@@ -570,7 +570,7 @@ class WP_Test_JSON_Posts extends WP_Test_JSON_TestCase {
 
 	function test_edit_post() {
 		$data = $this->set_data( array( 'id' => $this->post_id ) ) ;
-		$response = $this->endpoint->edit_post( $this->post_id, $data );
+		$response = $this->endpoint->update( $this->post_id, $data );
 
 		$this->assertNotInstanceOf( 'WP_Error', $response );
 		$response = json_ensure_response( $response );
@@ -595,7 +595,7 @@ class WP_Test_JSON_Posts extends WP_Test_JSON_TestCase {
 		$user->get_role_caps();
 		$user->update_user_level_from_caps();
 
-		$response = $this->endpoint->edit_post( $this->post_id, $data );
+		$response = $this->endpoint->update( $this->post_id, $data );
 		$this->assertErrorResponse( 'json_cannot_edit', $response, 401 );
 	}
 
@@ -615,7 +615,7 @@ class WP_Test_JSON_Posts extends WP_Test_JSON_TestCase {
 		$user->get_role_caps();
 		$user->update_user_level_from_caps();
 
-		$response = $this->endpoint->edit_post( $this->post_id, $data );
+		$response = $this->endpoint->update( $this->post_id, $data );
 		$this->assertErrorResponse( 'json_cannot_edit', $response, 401 );
 	}
 
@@ -625,7 +625,7 @@ class WP_Test_JSON_Posts extends WP_Test_JSON_TestCase {
 			'type' => 'page',
 		) ) ;
 
-		$response = $this->endpoint->edit_post( $this->post_id, $data );
+		$response = $this->endpoint->update( $this->post_id, $data );
 		$this->assertErrorResponse( 'json_cannot_change_post_type', $response, 400 );
 	}
 
@@ -635,7 +635,7 @@ class WP_Test_JSON_Posts extends WP_Test_JSON_TestCase {
 			'type' => 'testposttype',
 		) ) ;
 
-		$response = $this->endpoint->edit_post( $this->post_id, $data );
+		$response = $this->endpoint->update( $this->post_id, $data );
 		$this->assertErrorResponse( 'json_invalid_post_type', $response, 400 );
 	}
 
@@ -645,7 +645,7 @@ class WP_Test_JSON_Posts extends WP_Test_JSON_TestCase {
 			'sticky' => true,
 		));
 
-		$response = $this->endpoint->edit_post( $this->post_id, $data );
+		$response = $this->endpoint->update( $this->post_id, $data );
 		$response = json_ensure_response( $response );
 
 		$edited_post = get_post( $this->post_id );
@@ -659,7 +659,7 @@ class WP_Test_JSON_Posts extends WP_Test_JSON_TestCase {
 			'sticky' => false,
 		));
 
-		$response = $this->endpoint->edit_post( $this->post_id, $data );
+		$response = $this->endpoint->update( $this->post_id, $data );
 		$response = json_ensure_response( $response );
 
 		$edited_post = get_post( $this->post_id );
