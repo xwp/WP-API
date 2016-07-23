@@ -154,12 +154,14 @@ if ( ! function_exists( 'create_initial_rest_routes' ) ) {
 	function create_initial_rest_routes() {
 
 		foreach ( get_post_types( array( 'show_in_rest' => true ), 'objects' ) as $post_type ) {
+			$controller = null;
 			$class = ! empty( $post_type->rest_controller_class ) ? $post_type->rest_controller_class : 'WP_REST_Posts_Controller';
 
-			if ( ! class_exists( $class ) ) {
-				continue;
+			if ( is_string( $class ) && class_exists( $class ) ) {
+				$controller = new $class( $post_type->name );
+			} elseif ( is_object( $class ) ) {
+				$controller = $class;
 			}
-			$controller = new $class( $post_type->name );
 			if ( ! is_subclass_of( $controller, 'WP_REST_Controller' ) ) {
 				continue;
 			}
@@ -186,12 +188,14 @@ if ( ! function_exists( 'create_initial_rest_routes' ) ) {
 
 		// Terms.
 		foreach ( get_taxonomies( array( 'show_in_rest' => true ), 'object' ) as $taxonomy ) {
+			$controller = null;
 			$class = ! empty( $taxonomy->rest_controller_class ) ? $taxonomy->rest_controller_class : 'WP_REST_Terms_Controller';
 
-			if ( ! class_exists( $class ) ) {
-				continue;
+			if ( is_string( $class ) && class_exists( $class ) ) {
+				$controller = new $class( $taxonomy->name );
+			} elseif ( is_object( $class ) ) {
+				$controller = $class;
 			}
-			$controller = new $class( $taxonomy->name );
 			if ( ! is_subclass_of( $controller, 'WP_REST_Controller' ) ) {
 				continue;
 			}
